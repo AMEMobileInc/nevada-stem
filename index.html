@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 네바다 AI STEM 글로벌 캠프 | K-EnterTechHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --neon-blue: #00d4ff;
+    --neon-green: #39ff14;
+    --deep-space: #020818;
+    --space-dark: #050e2a;
+    --space-mid: #0a1a3e;
+    --cosmic-purple: #1a0a3e;
+    --gold: #ffd700;
+    --orange: #ff6b35;
+    --text-light: #e0efff;
+    --text-muted: #7090b0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep-space);
+    color: var(--text-light);
+    font-family: 'Noto Sans KR', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 20px; height: 20px;
+    border: 2px solid var(--neon-blue);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s, border-color 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-dot {
+    width: 5px; height: 5px;
+    background: var(--neon-blue);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Stars background */
+  #stars-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; width: 100%;
+    z-index: 1000;
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(2,8,24,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,212,255,0.15);
+  }
+  .nav-logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--neon-blue);
+    letter-spacing: 2px;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+    font-family: 'Space Mono', monospace;
+  }
+  .nav-links a:hover { color: var(--neon-blue); }
+  .nav-cta {
+    background: linear-gradient(135deg, var(--neon-blue), #0050ff);
+    color: white;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+    font-family: 'Space Mono', monospace;
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,255,0.4); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 40px 80px;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.4);
+    color: var(--neon-blue);
+    padding: 8px 20px;
+    border-radius: 40px;
+    font-size: 12px;
+    letter-spacing: 3px;
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-ko-title {
+    font-size: clamp(14px, 2vw, 18px);
+    color: var(--gold);
+    letter-spacing: 4px;
+    margin-bottom: 12px;
+    font-weight: 300;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  .hero-main-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(36px, 7vw, 88px);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #fff 0%, var(--neon-blue) 50%, #fff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-sub-title {
+    font-size: clamp(20px, 4vw, 42px);
+    font-weight: 900;
+    color: var(--neon-blue);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.8s 0.3s ease both;
+    text-shadow: 0 0 30px rgba(0,212,255,0.5);
+  }
+
+  .hero-description {
+    font-size: clamp(13px, 1.5vw, 16px);
+    color: var(--text-muted);
+    max-width: 700px;
+    line-height: 1.8;
+    margin-bottom: 40px;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s 0.5s ease both;
+  }
+
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(22px, 3vw, 36px);
+    font-weight: 900;
+    color: var(--neon-blue);
+    display: block;
+    text-shadow: 0 0 20px rgba(0,212,255,0.5);
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-top: 4px;
+    display: block;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.6s ease both;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--neon-blue) 0%, #0055ff 100%);
+    color: white;
+    padding: 16px 40px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0,212,255,0.4); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--neon-blue);
+    padding: 16px 40px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(0,212,255,0.4);
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .btn-secondary:hover { background: rgba(0,212,255,0.1); border-color: var(--neon-blue); }
+
+  /* Orbit animation */
+  .orbit-container {
+    position: absolute;
+    width: 600px; height: 600px;
+    border: 1px dashed rgba(0,212,255,0.1);
+    border-radius: 50%;
+    animation: spin 40s linear infinite;
+    pointer-events: none;
+  }
+  .orbit-dot {
+    width: 10px; height: 10px;
+    background: var(--neon-blue);
+    border-radius: 50%;
+    position: absolute;
+    top: -5px; left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 20px var(--neon-blue);
+  }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* SECTION COMMON */
+  section { position: relative; z-index: 1; }
+  .section-container { max-width: 1200px; margin: 0 auto; padding: 100px 40px; }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--neon-blue);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .section-title {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .section-subtitle {
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 600px;
+    margin-bottom: 64px;
+  }
+
+  /* TIMELINE / PROGRAM */
+  .program-section { background: var(--space-dark); }
+  .timeline {
+    position: relative;
+    padding-left: 0;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 40px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--neon-blue), transparent);
+  }
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    margin-bottom: 48px;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.6s ease;
+  }
+  .timeline-item.visible { opacity: 1; transform: translateX(0); }
+  .timeline-dot {
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 8px;
+  }
+  .dot-circle {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--space-dark);
+    border: 2px solid var(--neon-blue);
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 0 20px rgba(0,212,255,0.4);
+    flex-shrink: 0;
+  }
+  .dot-circle.gold { border-color: var(--gold); box-shadow: 0 0 20px rgba(255,215,0,0.4); }
+  .dot-circle.green { border-color: var(--neon-green); box-shadow: 0 0 20px rgba(57,255,20,0.4); }
+  .dot-circle.orange { border-color: var(--orange); box-shadow: 0 0 20px rgba(255,107,53,0.4); }
+  .timeline-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .timeline-content {
+    background: rgba(10,26,62,0.6);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 12px;
+    padding: 28px 32px;
+    transition: border-color 0.3s;
+  }
+  .timeline-content:hover { border-color: rgba(0,212,255,0.5); }
+  .layer-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  .lb-blue { background: rgba(0,212,255,0.15); color: var(--neon-blue); border: 1px solid rgba(0,212,255,0.3); }
+  .lb-gold { background: rgba(255,215,0,0.1); color: var(--gold); border: 1px solid rgba(255,215,0,0.3); }
+  .lb-green { background: rgba(57,255,20,0.1); color: var(--neon-green); border: 1px solid rgba(57,255,20,0.3); }
+  .lb-orange { background: rgba(255,107,53,0.1); color: var(--orange); border: 1px solid rgba(255,107,53,0.3); }
+  .timeline-content h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .timeline-content p { color: var(--text-muted); font-size: 14px; line-height: 1.7; margin-bottom: 12px; }
+  .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .tag {
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    color: var(--text-muted);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* LAYERS CARDS */
+  .layers-section { background: var(--deep-space); }
+  .layers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .layer-card {
+    background: linear-gradient(135deg, var(--space-mid), var(--cosmic-purple));
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 16px;
+    padding: 36px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .layer-card.visible { opacity: 1; transform: translateY(0); }
+  .layer-card:hover { transform: translateY(-8px); border-color: rgba(0,212,255,0.5); box-shadow: 0 20px 60px rgba(0,212,255,0.15); }
+  .layer-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle at top right, rgba(0,212,255,0.1), transparent 70%);
+    pointer-events: none;
+  }
+  .layer-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 64px;
+    font-weight: 900;
+    color: rgba(0,212,255,0.08);
+    position: absolute;
+    top: 16px; right: 24px;
+    line-height: 1;
+  }
+  .layer-icon { font-size: 36px; margin-bottom: 16px; }
+  .layer-card h3 { font-size: 18px; font-weight: 900; margin-bottom: 8px; }
+  .layer-card .layer-period {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--neon-blue);
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .layer-card p { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+  .layer-card ul { list-style: none; margin-top: 16px; }
+  .layer-card ul li {
+    font-size: 13px;
+    color: var(--text-muted);
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    gap: 8px;
+  }
+  .layer-card ul li::before { content: '▸'; color: var(--neon-blue); flex-shrink: 0; }
+
+  /* FACULTY */
+  .faculty-section { background: var(--space-dark); }
+  .faculty-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+  }
+  .faculty-card {
+    background: rgba(10,26,62,0.6);
+    border: 1px solid rgba(0,212,255,0.1);
+    border-radius: 12px;
+    padding: 28px 24px;
+    transition: all 0.3s;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .faculty-card.visible { opacity: 1; transform: translateY(0); }
+  .faculty-card:hover { border-color: rgba(0,212,255,0.4); transform: translateY(-4px); }
+  .faculty-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--neon-blue), #0050ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 16px;
+    box-shadow: 0 0 30px rgba(0,212,255,0.3);
+  }
+  .faculty-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .faculty-role { font-size: 12px; color: var(--neon-blue); font-family: 'Space Mono', monospace; margin-bottom: 12px; display: block; }
+  .faculty-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* ARTICLES */
+  .articles-section { background: var(--deep-space); }
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .article-card {
+    background: rgba(10,26,62,0.6);
+    border: 1px solid rgba(0,212,255,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .article-card.visible { opacity: 1; transform: translateY(0); }
+  .article-card:hover { border-color: rgba(0,212,255,0.4); transform: translateY(-4px); }
+  .article-thumb {
+    height: 160px;
+    background: linear-gradient(135deg, var(--space-mid), var(--cosmic-purple));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .article-thumb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 50%, rgba(10,26,62,0.8));
+  }
+  .article-body { padding: 20px; }
+  .article-cat { font-size: 10px; font-family: 'Space Mono', monospace; color: var(--neon-blue); letter-spacing: 2px; margin-bottom: 8px; display: block; }
+  .article-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+  .article-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* VIDEO SECTION */
+  .video-section { background: var(--space-dark); }
+  .video-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+  }
+  .video-main {
+    background: rgba(10,26,62,0.6);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.3s;
+  }
+  .video-main:hover { border-color: rgba(0,212,255,0.5); }
+  .video-thumb {
+    height: 300px;
+    background: linear-gradient(135deg, #0a1a3e 0%, #1a0a3e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .video-thumb .big-icon { font-size: 80px; z-index: 1; }
+  .video-thumb::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 40%, rgba(0,212,255,0.15), transparent 60%);
+  }
+  .play-btn {
+    position: absolute;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: rgba(0,212,255,0.2);
+    border: 2px solid var(--neon-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    z-index: 2;
+    transition: all 0.3s;
+    bottom: 20px;
+    right: 20px;
+  }
+  .video-main:hover .play-btn { background: rgba(0,212,255,0.4); transform: scale(1.1); }
+  .video-info { padding: 20px; }
+  .video-info h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .video-info p { font-size: 14px; color: var(--text-muted); }
+  .video-list { display: flex; flex-direction: column; gap: 16px; }
+  .video-item {
+    background: rgba(10,26,62,0.6);
+    border: 1px solid rgba(0,212,255,0.1);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .video-item:hover { border-color: rgba(0,212,255,0.4); }
+  .video-item-thumb {
+    width: 80px; height: 60px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--space-mid), var(--cosmic-purple));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .video-item h5 { font-size: 13px; font-weight: 700; margin-bottom: 4px; line-height: 1.4; }
+  .video-item span { font-size: 11px; color: var(--text-muted); font-family: 'Space Mono', monospace; }
+
+  /* CHATBOT */
+  .chatbot-section { background: var(--deep-space); }
+  .chatbot-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .chatbot-info h2 { font-size: clamp(28px, 3.5vw, 42px); font-weight: 900; margin-bottom: 16px; }
+  .chatbot-info p { font-size: 15px; color: var(--text-muted); line-height: 1.8; margin-bottom: 24px; }
+  .chatbot-features { list-style: none; }
+  .chatbot-features li {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 14px;
+    color: var(--text-muted);
+    align-items: center;
+  }
+  .chatbot-features li .fi { font-size: 20px; flex-shrink: 0; }
+  .chat-window {
+    background: rgba(10,26,62,0.8);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+  .chat-header {
+    background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(0,80,255,0.1));
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(0,212,255,0.15);
+  }
+  .chat-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--neon-blue), #0050ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 0 20px rgba(0,212,255,0.4);
+  }
+  .chat-header-info h4 { font-size: 15px; font-weight: 700; }
+  .chat-online { font-size: 11px; color: var(--neon-green); font-family: 'Space Mono', monospace; }
+  .chat-messages {
+    padding: 20px;
+    height: 320px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.3); border-radius: 2px; }
+  .msg {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .msg.user { flex-direction: row-reverse; }
+  .msg-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .msg-avatar.bot { background: linear-gradient(135deg, var(--neon-blue), #0050ff); }
+  .msg-avatar.user-av { background: rgba(255,255,255,0.1); }
+  .msg-bubble {
+    max-width: 75%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .msg.bot .msg-bubble { background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2); border-top-left-radius: 4px; }
+  .msg.user .msg-bubble { background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(0,80,255,0.2)); border: 1px solid rgba(0,212,255,0.3); border-top-right-radius: 4px; }
+  .chat-quick-btns {
+    padding: 0 20px 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .quick-btn {
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    color: var(--neon-blue);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  .quick-btn:hover { background: rgba(0,212,255,0.2); }
+  .chat-input-area {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(0,212,255,0.1);
+    display: flex;
+    gap: 12px;
+  }
+  .chat-input {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 10px;
+    padding: 10px 16px;
+    color: white;
+    font-size: 13px;
+    outline: none;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: var(--neon-blue); }
+  .chat-send {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--neon-blue), #0050ff);
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .chat-send:hover { transform: scale(1.1); box-shadow: 0 5px 20px rgba(0,212,255,0.4); }
+  .typing-indicator {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 4px 0;
+  }
+  .typing-dot {
+    width: 6px; height: 6px;
+    background: var(--neon-blue);
+    border-radius: 50%;
+    animation: typingBounce 1.2s ease infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingBounce { 0%,80%,100% { transform: translateY(0); } 40% { transform: translateY(-8px); } }
+
+  /* FAQ */
+  .faq-section { background: var(--space-dark); }
+  .faq-list { max-width: 800px; }
+  .faq-item {
+    border: 1px solid rgba(0,212,255,0.1);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .faq-item.open { border-color: rgba(0,212,255,0.4); }
+  .faq-q {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background 0.2s;
+    gap: 12px;
+  }
+  .faq-q:hover { background: rgba(0,212,255,0.05); }
+  .faq-icon { font-size: 20px; transition: transform 0.3s; color: var(--neon-blue); flex-shrink: 0; }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+  .faq-a {
+    padding: 0 24px;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+  .faq-item.open .faq-a { padding: 0 24px 20px; max-height: 300px; }
+
+  /* CTA */
+  .cta-section {
+    background: linear-gradient(135deg, var(--space-mid) 0%, var(--cosmic-purple) 50%, var(--space-mid) 100%);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,212,255,0.1) 0%, transparent 70%);
+  }
+  .cta-section .section-container { position: relative; z-index: 1; }
+  .cta-section h2 { font-size: clamp(28px, 4vw, 52px); font-weight: 900; margin-bottom: 16px; }
+  .cta-section p { font-size: 16px; color: var(--text-muted); margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; }
+  .cta-info {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .cta-info-item { text-align: center; }
+  .cta-info-item .label { font-size: 12px; color: var(--text-muted); font-family: 'Space Mono', monospace; letter-spacing: 2px; display: block; margin-bottom: 6px; }
+  .cta-info-item .value { font-size: 18px; font-weight: 700; color: white; }
+
+  /* FOOTER */
+  footer {
+    background: #010610;
+    border-top: 1px solid rgba(0,212,255,0.1);
+    padding: 48px 40px 32px;
+    position: relative;
+    z-index: 1;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 48px;
+  }
+  .footer-brand .logo { font-family: 'Orbitron', monospace; font-size: 18px; font-weight: 900; color: var(--neon-blue); margin-bottom: 12px; display: block; }
+  .footer-brand p { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+  .footer-col h5 { font-size: 13px; font-weight: 700; margin-bottom: 16px; letter-spacing: 1px; text-transform: uppercase; color: var(--neon-blue); font-family: 'Space Mono', monospace; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a { color: var(--text-muted); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+  .footer-col ul li a:hover { color: var(--neon-blue); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .footer-bottom p { font-size: 12px; color: var(--text-muted); }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    backdrop-filter: blur(8px);
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--space-mid);
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 600px;
+    width: 100%;
+    transform: translateY(20px);
+    transition: transform 0.3s;
+    position: relative;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.2s;
+    width: 36px; height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+  }
+  .modal-close:hover { color: white; background: rgba(255,255,255,0.1); }
+  .modal h3 { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+  .modal .sub { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+  .form-group { margin-bottom: 16px; }
+  .form-label { font-size: 12px; font-family: 'Space Mono', monospace; color: var(--neon-blue); letter-spacing: 2px; display: block; margin-bottom: 8px; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: border-color 0.2s;
+  }
+  .form-select option { background: var(--space-mid); }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--neon-blue); }
+  .form-textarea { height: 100px; resize: vertical; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* COUNTDOWN */
+  .countdown-section { background: var(--space-mid); text-align: center; padding: 40px; border-bottom: 1px solid rgba(0,212,255,0.1); position: relative; z-index: 1; }
+  .countdown-label { font-size: 11px; font-family: 'Space Mono', monospace; color: var(--neon-blue); letter-spacing: 4px; margin-bottom: 16px; display: block; }
+  .countdown {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .countdown-item { text-align: center; }
+  .countdown-num {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 900;
+    color: var(--neon-blue);
+    display: block;
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(0,212,255,0.5);
+  }
+  .countdown-unit { font-size: 11px; color: var(--text-muted); font-family: 'Space Mono', monospace; letter-spacing: 2px; margin-top: 4px; display: block; }
+  .countdown-sep {
+    font-family: 'Orbitron', monospace;
+    font-size: 48px;
+    color: rgba(0,212,255,0.3);
+    line-height: 1.2;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+
+  /* SPOTS */
+  .spots-bar {
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 12px;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 48px;
+  }
+  .spots-text { font-size: 14px; }
+  .spots-text strong { color: var(--neon-blue); }
+  .spots-progress-wrap { flex: 1; min-width: 200px; }
+  .spots-progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); font-family: 'Space Mono', monospace; margin-bottom: 8px; }
+  .spots-progress { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+  .spots-fill { height: 100%; background: linear-gradient(90deg, var(--neon-blue), var(--neon-green)); border-radius: 3px; width: 30%; animation: fillBar 2s ease both; }
+  @keyframes fillBar { from { width: 0; } to { width: 30%; } }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .section-container { padding: 70px 20px; }
+    .layers-grid, .video-grid, .chatbot-wrapper, .footer-grid { grid-template-columns: 1fr; }
+    .hero { padding: 100px 20px 60px; }
+    .orbit-container { display: none; }
+    .cta-info { gap: 24px; }
+    .form-row { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .glow-text { text-shadow: 0 0 30px rgba(0,212,255,0.5); }
+  .gradient-text {
+    background: linear-gradient(135deg, var(--neon-blue), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Notification */
+  .notification {
+    position: fixed;
+    bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(0,80,255,0.2));
+    border: 1px solid rgba(0,212,255,0.4);
+    backdrop-filter: blur(20px);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 3000;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    white-space: nowrap;
+  }
+  .notification.show { transform: translateX(-50%) translateY(0); }
+
+  /* Particle floating */
+  .particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 50%;
+    animation: floatParticle linear infinite;
+  }
+  @keyframes floatParticle {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- NOTIFICATION -->
+<div class="notification" id="notification"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">K-EnterTechHub</a>
+  <ul class="nav-links">
+    <li><a href="#program">프로그램</a></li>
+    <li><a href="#faculty">교수진</a></li>
+    <li><a href="#articles">아티클</a></li>
+    <li><a href="#videos">영상</a></li>
+    <li><a href="#chatbot">AI 상담</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#apply" class="nav-cta" onclick="openModal()">지금 신청하기 →</a>
+</nav>
+
+<!-- COUNTDOWN -->
+<div class="countdown-section">
+  <span class="countdown-label">✦ CAMP STARTS IN ✦</span>
+  <div class="countdown">
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-days">---</span>
+      <span class="countdown-unit">DAYS</span>
+    </div>
+    <div class="countdown-sep">:</div>
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-hours">--</span>
+      <span class="countdown-unit">HOURS</span>
+    </div>
+    <div class="countdown-sep">:</div>
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-mins">--</span>
+      <span class="countdown-unit">MINS</span>
+    </div>
+    <div class="countdown-sep">:</div>
+    <div class="countdown-item">
+      <span class="countdown-num" id="cd-secs">--</span>
+      <span class="countdown-unit">SECS</span>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="orbit-container">
+    <div class="orbit-dot"></div>
+  </div>
+  <div class="orbit-container" style="width:900px;height:900px;animation-duration:60s;animation-direction:reverse;border-color:rgba(255,215,0,0.06);">
+    <div class="orbit-dot" style="background:var(--gold);box-shadow:0 0 20px var(--gold);"></div>
+  </div>
+
+  <span class="hero-badge">✦ 한국 유일의 글로벌 STEM 프로그램 ✦</span>
+  <div class="hero-ko-title">2026 SUMMER | 네바다 라스베이거스 + LA</div>
+  <h1 class="hero-main-title">NEVADA<br>AI STEM</h1>
+  <div class="hero-sub-title">글로벌 캠프</div>
+  <p class="hero-description">
+    DRI STEM Program + Korea STEM School Special Camp<br>
+    드론 · 로켓 · 코딩 · BattleBots + UCLA · Caltech · USC 명문대 투어<br>
+    <strong style="color:white;">2026년 7월 23일(수) ~ 7월 30일(수) · 8일간</strong>
+  </p>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">8</span>
+      <span class="stat-label">박 8 일</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" style="color:var(--gold);">10</span>
+      <span class="stat-label">명 한정</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" style="color:var(--neon-green);">3</span>
+      <span class="stat-label">레이어 구성</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" style="color:var(--orange);">5</span>
+      <span class="stat-label">개 기관 협력</span>
+    </div>
+  </div>
+
+  <div class="hero-buttons">
+    <a href="#apply" class="btn-primary" onclick="openModal()">🚀 지금 신청하기</a>
+    <a href="#program" class="btn-secondary">📋 프로그램 보기</a>
+  </div>
+</section>
+
+<!-- LAYERS OVERVIEW -->
+<section class="layers-section" id="program">
+  <div class="section-container">
+    <span class="section-tag">// PROGRAM STRUCTURE</span>
+    <h2 class="section-title">3개 <span class="gradient-text">레이어</span> 구성</h2>
+    <p class="section-subtitle">이론 → 실습 → 응용 → 발표 → 진로탐색의 완성된 학습 사이클</p>
+
+    <div class="layers-grid">
+      <div class="layer-card" style="transition-delay:0s;">
+        <div class="layer-num">01</div>
+        <div class="layer-icon">🔬</div>
+        <span class="layer-period">DAY 1–2, 4–5 · 목·금·일·월</span>
+        <h3>DRI STEM Program</h3>
+        <p>1959년 설립, 600명+ 연구원, 세계 7개 대륙 300건+ 프로젝트를 수행하는 Desert Research Institute의 핵심 과학 교육</p>
+        <ul>
+          <li>전기회로 & 에너지 과학 원리</li>
+          <li>환경과학 STEM Lab 실습</li>
+          <li>캡스톤 프레젠테이션</li>
+          <li>DRI 공동 명의 수료증 발급</li>
+        </ul>
+      </div>
+      <div class="layer-card" style="transition-delay:0.1s; border-color:rgba(255,215,0,0.15);">
+        <div class="layer-num" style="color:rgba(255,215,0,0.08);">02</div>
+        <div class="layer-icon">🚁</div>
+        <span class="layer-period" style="color:var(--gold);">DAY 3 · 토요일 (7/26)</span>
+        <h3>Special Camp</h3>
+        <p>UNLV SEDS 학생 동아리와 함께하는 드론 · 로켓 · 코딩 · BattleBots 집중 프로그램</p>
+        <ul>
+          <li>🚁 어드밴스드 드론 & AI 자율비행</li>
+          <li>🚀 로켓 추진 원리 & 미션 플래닝</li>
+          <li>💻 AI & 코딩 (Python · 센서)</li>
+          <li>🤖 BattleBots Vegas 라이브 관람</li>
+        </ul>
+      </div>
+      <div class="layer-card" style="transition-delay:0.2s; border-color:rgba(57,255,20,0.15);">
+        <div class="layer-num" style="color:rgba(57,255,20,0.08);">03</div>
+        <div class="layer-icon">🎓</div>
+        <span class="layer-period" style="color:var(--neon-green);">DAY 6–7 · 화·수 (LA, 1박2일)</span>
+        <h3>LA 명문대 투어</h3>
+        <p>UCLA, Caltech, USC 현직 교수와의 1:1 면담으로 해외 대학 진학 비전을 구체화합니다</p>
+        <ul>
+          <li>UCLA 캠퍼스 공식 투어 & 교수 면담</li>
+          <li>Caltech / USC 연구환경 체험</li>
+          <li>STEM 진로 & 포트폴리오 전략 상담</li>
+          <li>한인 재학생 교류 세션</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="program-section">
+  <div class="section-container">
+    <span class="section-tag">// DAILY TIMELINE</span>
+    <h2 class="section-title">8일 상세 <span style="color:var(--neon-blue);">일정</span></h2>
+    <p class="section-subtitle">매일 체계적으로 설계된 몰입 학습 여정</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot">
+          <div class="dot-circle"></div>
+          <span class="timeline-date">7/23 (수)</span>
+        </div>
+        <div class="timeline-content">
+          <span class="layer-badge lb-blue">DAY 0 · ARRIVAL</span>
+          <h3>✈️ 한국 출발 · 라스베이거스 도착</h3>
+          <p>인천공항 출발 → 라스베이거스 국제공항 도착 → UNLV 기숙사 체크인 → 오리엔테이션 및 팀 빌딩</p>
+          <div class="tag-list"><span class="tag">인천 출발</span><span class="tag">UNLV 기숙사</span><span class="tag">오리엔테이션</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">
+          <div class="dot-circle"></div>
+          <span class="timeline-date">7/24~25 (목·금)</span>
+        </div>
+        <div class="timeline-content">
+          <span class="layer-badge lb-blue">LAYER 1 · DRI STEM</span>
+          <h3>🔬 DRI STEM Program Day 1–2</h3>
+          <p>오전: 전기회로·에너지 과학 원리 강의 | 오후: STEM Lab Hands-on 실습 | 저녁: Reflection Session & Team Project Planning</p>
+          <div class="tag-list"><span class="tag">전기회로</span><span class="tag">에너지과학</span><span class="tag">환경과학</span><span class="tag">실험키트</span><span class="tag">팀프로젝트</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">
+          <div class="dot-circle gold"></div>
+          <span class="timeline-date">7/26 (토)</span>
+        </div>
+        <div class="timeline-content" style="border-color:rgba(255,215,0,0.2);">
+          <span class="layer-badge lb-gold">LAYER 2 · SPECIAL CAMP</span>
+          <h3>🚁🚀🤖 드론 · 로켓 · BattleBots DAY</h3>
+          <p>오전: 어드밴스드 드론 & AI 자율비행 워크숍 (UNLV SEDS) | 오후: 로켓 추진원리 & 미션플래닝 | 저녁: BattleBots Destruct-A-Thon 라이브!</p>
+          <div class="tag-list"><span class="tag">UAV/UGV 조립</span><span class="tag">AI 자율비행</span><span class="tag">로켓 설계</span><span class="tag">SEDS UNLV</span><span class="tag">BattleBots</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">
+          <div class="dot-circle"></div>
+          <span class="timeline-date">7/27~28 (일·월)</span>
+        </div>
+        <div class="timeline-content">
+          <span class="layer-badge lb-blue">LAYER 1 · DRI STEM</span>
+          <h3>🔬 DRI STEM Program Day 3–4 + 캡스톤</h3>
+          <p>Day3: AI·코딩 심화 + 미션 디자인 워크숍 | Day4 오전: 최종 프로젝트 완성 | Day4 오후: 캡스톤 프레젠테이션 & <strong>DRI 공동 명의 수료증 수여</strong></p>
+          <div class="tag-list"><span class="tag">Python 코딩</span><span class="tag">AI 머신러닝</span><span class="tag">캡스톤 발표</span><span class="tag">수료증 발급</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">
+          <div class="dot-circle green"></div>
+          <span class="timeline-date">7/29~30 (화·수)</span>
+        </div>
+        <div class="timeline-content" style="border-color:rgba(57,255,20,0.2);">
+          <span class="layer-badge lb-green">LAYER 3 · LA 명문대</span>
+          <h3>🎓 UCLA · Caltech · USC 투어 (1박2일)</h3>
+          <p>7/29: UCLA 공식 투어 & 현직 교수 면담 & 한인 학생회 교류 | 7/30: Caltech / USC 캠퍼스 탐방 & 교수 면담 & STEM 진로 로드맵 상담</p>
+          <div class="tag-list"><span class="tag">UCLA</span><span class="tag">Caltech</span><span class="tag">USC</span><span class="tag">교수 면담</span><span class="tag">진로탐색</span></div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot">
+          <div class="dot-circle orange"></div>
+          <span class="timeline-date">7/30 (수) 저녁</span>
+        </div>
+        <div class="timeline-content" style="border-color:rgba(255,107,53,0.2);">
+          <span class="layer-badge lb-orange">CLOSING</span>
+          <h3>✈️ 귀국</h3>
+          <p>LA 국제공항 출발 → 인천국제공항 도착 · 8일간의 글로벌 STEM 여정 완성</p>
+          <div class="tag-list"><span class="tag">LA 출발</span><span class="tag">인천 도착</span><span class="tag">캠프 수료</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FACULTY -->
+<section class="faculty-section" id="faculty">
+  <div class="section-container">
+    <span class="section-tag">// FACULTY & ADVISORS</span>
+    <h2 class="section-title">세계적 <span class="gradient-text">전문가</span> 교수진</h2>
+    <p class="section-subtitle">DRI 연구원, UNLV 교수, KAIST AI 전문가가 직접 지도합니다</p>
+
+    <div class="faculty-grid">
+      <div class="faculty-card">
+        <div class="faculty-avatar">🔬</div>
+        <h4>손영권 박사</h4>
+        <span class="faculty-role">현지 총괄 · DRI 연구원</span>
+        <p>Desert Research Institute 연구원. 현지 프로그램 총괄 및 DRI STEM 교육 코디네이터</p>
+      </div>
+      <div class="faculty-card">
+        <div class="faculty-avatar" style="background:linear-gradient(135deg,var(--gold),#ff6b35);">🤖</div>
+        <h4>강민곤 교수</h4>
+        <span class="faculty-role" style="color:var(--gold);">UNLV CS · AI & ML</span>
+        <p>UNLV 컴퓨터과학 교수. AI·머신러닝 입문 특강, SEDS 학생 멘토 조율·배치 담당</p>
+      </div>
+      <div class="faculty-card">
+        <div class="faculty-avatar" style="background:linear-gradient(135deg,var(--neon-green),#00a0ff);">📐</div>
+        <h4>박정원 교수</h4>
+        <span class="faculty-role" style="color:var(--neon-green);">UNLV · 프로그램 자문</span>
+        <p>DRI STEM 세부 커리큘럼 자문. DRI 교육팀과 최종 협의하여 커리큘럼을 설계·확정</p>
+      </div>
+      <div class="faculty-card">
+        <div class="faculty-avatar" style="background:linear-gradient(135deg,var(--orange),#ff0080);">💡</div>
+        <h4>San Lee</h4>
+        <span class="faculty-role" style="color:var(--orange);">KAIST · AI 전문가</span>
+        <p>KAIST 출신 AI 전문가. 'STEM 기반 AI 응용' 특강 세션 진행, AI 챗봇 개발 총괄</p>
+      </div>
+      <div class="faculty-card">
+        <div class="faculty-avatar" style="background:linear-gradient(135deg,#ff00ff,#7000ff);">🚀</div>
+        <h4>SEDS UNLV 팀</h4>
+        <span class="faculty-role" style="color:#ff00ff;">Students for Space Exploration</span>
+        <p>로켓 추진 원리, 발사체 설계 멘토링. 대학생 롤모델로서 직접 로켓 캠프 진행</p>
+      </div>
+      <div class="faculty-card">
+        <div class="faculty-avatar" style="background:linear-gradient(135deg,#00fff0,#0050ff);">🏫</div>
+        <h4>DRI 교육팀</h4>
+        <span class="faculty-role">Desert Research Institute</span>
+        <p>세계 7개 대륙에서 연구활동 중인 DRI의 전문 교육팀이 직접 설계·운영하는 STEM Lab 과정</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLES -->
+<section class="articles-section" id="articles">
+  <div class="section-container">
+    <span class="section-tag">// FEATURED ARTICLES</span>
+    <h2 class="section-title">읽어볼 <span class="gradient-text">아티클</span></h2>
+    <p class="section-subtitle">STEM 교육, 항공우주, AI, 해외 대학 진학에 관한 최신 인사이트</p>
+
+    <div class="articles-grid">
+      <div class="article-card">
+        <div class="article-thumb">🔬</div>
+        <div class="article-body">
+          <span class="article-cat">STEM EDUCATION</span>
+          <h4>왜 STEM 교육이 미래를 바꾸는가: DRI와 함께하는 환경과학의 세계</h4>
+          <p>Desert Research Institute가 60년간 쌓아온 환경과학 연구가 어떻게 차세대 STEM 교육의 기반이 되고 있는지 알아봅니다.</p>
+        </div>
+      </div>
+      <div class="article-card">
+        <div class="article-thumb">🚁</div>
+        <div class="article-body">
+          <span class="article-cat">DRONE & AI</span>
+          <h4>드론 + AI 자율비행: 미래 항공우주 기술의 최전선</h4>
+          <p>UAV 조립부터 AI 알고리즘 설계까지, 중학생도 이해할 수 있는 드론 자율비행 기술의 핵심 원리를 소개합니다.</p>
+        </div>
+      </div>
+      <div class="article-card">
+        <div class="article-thumb">🎓</div>
+        <div class="article-body">
+          <span class="article-cat">COLLEGE GUIDE</span>
+          <h4>UCLA vs Caltech vs USC: 이공계 지원자를 위한 완벽 비교 가이드</h4>
+          <p>세계 최고 이공계 대학들의 입학 전략, 연구 환경, 장학금 제도를 현직 교수의 시각에서 비교 분석합니다.</p>
+        </div>
+      </div>
+      <div class="article-card">
+        <div class="article-thumb">🚀</div>
+        <div class="article-body">
+          <span class="article-cat">AEROSPACE</span>
+          <h4>SEDS가 이끄는 학생 로켓 프로젝트: 꿈에서 발사까지</h4>
+          <p>UNLV SEDS 학생들이 직접 설계·제작한 로켓 프로젝트의 도전과 성공 스토리. 항공우주공학의 꿈을 키우는 법.</p>
+        </div>
+      </div>
+      <div class="article-card">
+        <div class="article-thumb">🤖</div>
+        <div class="article-body">
+          <span class="article-cat">AI & CODING</span>
+          <h4>Python으로 시작하는 AI 머신러닝: 초등학생도 따라할 수 있는 첫걸음</h4>
+          <p>KAIST San Lee 교수가 설계한 'STEM 기반 AI 응용' 커리큘럼의 핵심 개념을 쉽게 풀어드립니다.</p>
+        </div>
+      </div>
+      <div class="article-card">
+        <div class="article-thumb">⚡</div>
+        <div class="article-body">
+          <span class="article-cat">BATTLEBOTS</span>
+          <h4>BattleBots로 배우는 응용 로보틱스: 전투 로봇 속 숨겨진 공학 원리</h4>
+          <p>TV 쇼를 넘어 실제 엔지니어링 전략이 담긴 BattleBots. 로봇 전투를 통해 배우는 구조역학과 에너지 변환 원리.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEOS -->
+<section class="video-section" id="videos">
+  <div class="section-container">
+    <span class="section-tag">// VIDEO CONTENT</span>
+    <h2 class="section-title">생생한 <span class="gradient-text">현장 영상</span></h2>
+    <p class="section-subtitle">DRI, UNLV, 그리고 명문대 캠퍼스의 생생한 현장을 미리 만나보세요</p>
+
+    <div class="video-grid">
+      <div class="video-main" onclick="showNotification('영상 서비스 준비중입니다! 곧 공개됩니다 🎬')">
+        <div class="video-thumb">
+          <span class="big-icon">🔬</span>
+          <div class="play-btn">▶</div>
+        </div>
+        <div class="video-info">
+          <h3>DRI STEM Lab 투어: 세계적 연구기관의 교육 현장</h3>
+          <p>Desert Research Institute의 최첨단 STEM Lab을 직접 돌아보는 가상 투어 영상입니다.</p>
+        </div>
+      </div>
+      <div class="video-list">
+        <div class="video-item" onclick="showNotification('영상 서비스 준비중입니다! 🎬')">
+          <div class="video-item-thumb">🚁</div>
+          <div>
+            <h5>드론 AI 자율비행 시연</h5>
+            <span>UNLV SEDS · 3:42</span>
+          </div>
+        </div>
+        <div class="video-item" onclick="showNotification('영상 서비스 준비중입니다! 🎬')">
+          <div class="video-item-thumb">🚀</div>
+          <div>
+            <h5>로켓 발사 실험 현장</h5>
+            <span>SEDS UNLV · 5:18</span>
+          </div>
+        </div>
+        <div class="video-item" onclick="showNotification('영상 서비스 준비중입니다! 🎬')">
+          <div class="video-item-thumb">🎓</div>
+          <div>
+            <h5>UCLA 캠퍼스 투어</h5>
+            <span>LA Tour · 8:05</span>
+          </div>
+        </div>
+        <div class="video-item" onclick="showNotification('영상 서비스 준비중입니다! 🎬')">
+          <div class="video-item-thumb">🤖</div>
+          <div>
+            <h5>BattleBots Vegas 하이라이트</h5>
+            <span>Special Camp · 4:57</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHATBOT -->
+<section class="chatbot-section" id="chatbot">
+  <div class="section-container">
+    <div class="chatbot-wrapper">
+      <div class="chatbot-info reveal">
+        <span class="section-tag">// AI Q&A CHATBOT</span>
+        <h2>24시간 AI<br><span class="gradient-text">스템 상담봇</span></h2>
+        <p>궁금한 점이 있으신가요? San Lee (KAIST·AI 전문가)가 설계한 AI 챗봇이 프로그램, 신청, 일정, 비용 등 모든 질문에 즉시 답변해 드립니다.</p>
+        <ul class="chatbot-features">
+          <li><span class="fi">🕐</span> 24시간 365일 즉시 응답</li>
+          <li><span class="fi">🇰🇷</span> 한국어 완벽 지원</li>
+          <li><span class="fi">📚</span> 프로그램 전체 내용 학습</li>
+          <li><span class="fi">🎯</span> 맞춤형 진로 상담 연결</li>
+        </ul>
+      </div>
+      <div class="chat-window">
+        <div class="chat-header">
+          <div class="chat-avatar">🤖</div>
+          <div class="chat-header-info">
+            <h4>STEM Camp AI 어시스턴트</h4>
+            <span class="chat-online">● 온라인 · 즉시 답변 가능</span>
+          </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg bot">
+            <div class="msg-avatar bot">🤖</div>
+            <div class="msg-bubble">안녕하세요! 2026 네바다 AI STEM 글로벌 캠프 AI 어시스턴트입니다. 프로그램, 신청 방법, 비용, 일정 등 무엇이든 물어보세요! 😊</div>
+          </div>
+        </div>
+        <div class="chat-quick-btns">
+          <button class="quick-btn" onclick="quickAsk('참가비가 얼마인가요?')">💰 참가비</button>
+          <button class="quick-btn" onclick="quickAsk('대상 나이가 어떻게 되나요?')">👦 대상 연령</button>
+          <button class="quick-btn" onclick="quickAsk('신청 방법을 알려주세요')">📝 신청방법</button>
+          <button class="quick-btn" onclick="quickAsk('숙박은 어디서 하나요?')">🏠 숙박</button>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" class="chat-input" id="chatInput" placeholder="질문을 입력하세요..." onkeypress="if(event.key==='Enter') sendMessage()">
+          <button class="chat-send" onclick="sendMessage()">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="section-container">
+    <span class="section-tag">// FREQUENTLY ASKED</span>
+    <h2 class="section-title">자주 묻는 <span class="gradient-text">질문</span></h2>
+    <p class="section-subtitle" style="margin-bottom:40px;">궁금한 점을 바로 확인하세요</p>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>참가비 800만원에 무엇이 포함되나요?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">참가비 800만원에는 UNLV 기숙사(7박), DRI STEM 교육 프로그램(4일), 토요일 스페셜 캠프, BattleBots Vegas 입장권, LA 1박2일 호텔 및 명문대 투어, 식사(일정 내), 교육 기자재 및 실험키트, DRI 공동명의 수료증이 모두 포함됩니다. 항공료는 별도입니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>어떤 학생이 참가할 수 있나요?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">초등학교 5학년부터 중학교 3학년(대략 10~15세)까지 참가 가능합니다. 특별한 사전 지식이 없어도 참여할 수 있으며, 과학·기술·코딩·우주·드론에 관심 있는 학생이라면 누구나 환영합니다. 영어가 완벽하지 않아도 현지 통역 지원이 제공됩니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>안전 관리는 어떻게 이루어지나요?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">전 일정 동안 인솔 교사와 현지 코디네이터가 함께합니다. DRI 및 UNLV 내 활동은 기관의 안전 지침을 따르며, 드론·로켓 실습 시에는 SEDS 전문 멘토가 직접 지도합니다. 여행자 보험은 참가비에 포함되어 있으며, 비상 연락망이 24시간 운영됩니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>영어를 잘 못해도 참가할 수 있나요?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">물론입니다! 한국어-영어 통역 지원이 제공되며, 일부 강의는 한국어 설명이 병행됩니다. 실습 중심의 Hands-on 프로그램이므로 언어 장벽을 크게 느끼지 않고 참여할 수 있습니다. 오히려 영어 환경에 자연스럽게 노출되어 글로벌 역량이 향상됩니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>DRI 수료증은 어디에 활용할 수 있나요?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">DRI(Desert Research Institute)와 K-EnterTechHub 공동 명의로 발급되는 수료증은 해외 대학 입학 포트폴리오, 과학고·영재고 입학 자료, 각종 STEM 경시대회 이력서 등에 활용할 수 있습니다. 세계적 연구기관인 DRI의 공인 수료증으로서 높은 신뢰도를 가집니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span>신청 방법과 마감일은 언제인가요?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">모집 인원이 10명으로 한정되어 있습니다. 신청은 이메일(existen75@kentertechhub.com) 또는 전화(+82-10-3686-8722)로 문의하시거나, 본 페이지 상단의 '지금 신청하기' 버튼을 통해 지원서를 제출하시면 됩니다. 선착순 접수이므로 조기 마감될 수 있습니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="apply">
+  <div class="section-container" style="text-align:center;">
+    <span class="section-tag" style="justify-content:center;display:block;">// LIMITED SPOTS</span>
+    <h2 style="margin-bottom:16px;">🚀 10명 한정<br><span class="gradient-text">지금 바로 신청하세요</span></h2>
+    <p>한국 유일의 DRI + UNLV + 명문대 연계 글로벌 STEM 캠프.<br>매 년 조기 마감됩니다. 지금 자리를 확보하세요.</p>
+
+    <div class="cta-info">
+      <div class="cta-info-item">
+        <span class="label">DATE</span>
+        <span class="value">2026.07.23 – 07.30</span>
+      </div>
+      <div class="cta-info-item">
+        <span class="label">LOCATION</span>
+        <span class="value">Las Vegas + LA</span>
+      </div>
+      <div class="cta-info-item">
+        <span class="label">AGE</span>
+        <span class="value">초5 ~ 중3</span>
+      </div>
+      <div class="cta-info-item">
+        <span class="label">FEE</span>
+        <span class="value">₩8,000,000</span>
+      </div>
+    </div>
+
+    <div class="spots-bar reveal">
+      <div class="spots-text"><strong>3명</strong> 신청 완료 · <strong>7자리</strong> 남음</div>
+      <div class="spots-progress-wrap">
+        <div class="spots-progress-label">
+          <span>모집 현황</span>
+          <span>10명 한정</span>
+        </div>
+        <div class="spots-progress"><div class="spots-fill"></div></div>
+      </div>
+      <a href="#" class="btn-primary" onclick="openModal();return false;">지금 신청하기 →</a>
+    </div>
+
+    <div style="margin-top:32px;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;">
+      <a href="mailto:existen75@kentertechhub.com" style="color:var(--text-muted);text-decoration:none;font-size:14px;">📧 existen75@kentertechhub.com</a>
+      <a href="tel:+821036868722" style="color:var(--text-muted);text-decoration:none;font-size:14px;">📞 +82-10-3686-8722</a>
+      <a href="https://kentertechhub.com/seutem" style="color:var(--neon-blue);text-decoration:none;font-size:14px;">🌐 kentertechhub.com/seutem</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo">K-EnterTechHub</span>
+        <p>주관: K-EnterTech Hub · DRI · MEDIONTECH · 3Stripe Venture Studio<br>현지 총괄: 손영권 박사(DRI)<br>UNLV: 강민곤 교수(CS·AI) · 박정원 교수(자문)<br>AI챗봇: San Lee (KAIST·AME Mobile)</p>
+      </div>
+      <div class="footer-col">
+        <h5>Program</h5>
+        <ul>
+          <li><a href="#program">DRI STEM</a></li>
+          <li><a href="#program">Special Camp</a></li>
+          <li><a href="#program">LA 명문대 투어</a></li>
+          <li><a href="#program">BattleBots</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Learn</h5>
+        <ul>
+          <li><a href="#articles">아티클</a></li>
+          <li><a href="#videos">영상</a></li>
+          <li><a href="#faculty">교수진</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <ul>
+          <li><a href="mailto:existen75@kentertechhub.com">이메일 문의</a></li>
+          <li><a href="tel:+821036868722">전화 문의</a></li>
+          <li><a href="https://kentertechhub.com/seutem">공식 웹사이트</a></li>
+          <li><a href="#apply" onclick="openModal()">신청하기</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 K-EnterTechHub · 2026 네바다 AI STEM 글로벌 캠프. All rights reserved.</p>
+      <p style="font-family:'Space Mono',monospace;font-size:11px;color:rgba(0,212,255,0.4);">POWERED BY DRI × UNLV × AI</p>
+    </div>
+  </div>
+</footer>
+
+<!-- APPLY MODAL -->
+<div class="modal-overlay" id="applyModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <span class="section-tag" style="margin-bottom:8px;">// APPLICATION FORM</span>
+    <h3>🚀 2026 STEM 캠프 신청</h3>
+    <div class="sub">모집 인원 10명 한정 · 선착순 접수</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">학생 이름</label>
+        <input type="text" class="form-input" placeholder="홍길동">
+      </div>
+      <div class="form-group">
+        <label class="form-label">학년</label>
+        <select class="form-select">
+          <option>초등 5학년</option>
+          <option>초등 6학년</option>
+          <option>중학교 1학년</option>
+          <option>중학교 2학년</option>
+          <option>중학교 3학년</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">학부모 이름</label>
+        <input type="text" class="form-input" placeholder="김철수">
+      </div>
+      <div class="form-group">
+        <label class="form-label">연락처</label>
+        <input type="tel" class="form-input" placeholder="010-0000-0000">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">이메일</label>
+      <input type="email" class="form-input" placeholder="example@email.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">관심 분야 (복수 선택 가능)</label>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
+        <label style="font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--neon-blue);"> 드론/AI</label>
+        <label style="font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--neon-blue);"> 로켓/항공우주</label>
+        <label style="font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--neon-blue);"> 코딩/프로그래밍</label>
+        <label style="font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--neon-blue);"> 환경과학</label>
+        <label style="font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" style="accent-color:var(--neon-blue);"> 명문대 진학</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">문의 또는 추가 요청사항</label>
+      <textarea class="form-textarea" placeholder="자유롭게 작성해 주세요..."></textarea>
+    </div>
+    <button class="btn-primary" style="width:100%;justify-content:center;" onclick="submitForm()">📨 신청서 제출하기</button>
+  </div>
+</div>
+
+<script>
+// STARS
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+for (let i = 0; i < 200; i++) {
+  stars.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    r: Math.random() * 1.5,
+    speed: Math.random() * 0.3 + 0.05,
+    opacity: Math.random()
+  });
+}
+
+function drawStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    s.opacity += (Math.random() - 0.5) * 0.02;
+    s.opacity = Math.max(0.1, Math.min(1, s.opacity));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(0, 212, 255, ${s.opacity * 0.6})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+
+// CURSOR
+const cursor = document.getElementById('cursor');
+const dot = document.getElementById('cursorDot');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX - 10 + 'px';
+  cursor.style.top = e.clientY - 10 + 'px';
+  dot.style.left = e.clientX - 2.5 + 'px';
+  dot.style.top = e.clientY - 2.5 + 'px';
+});
+document.addEventListener('mousedown', () => cursor.style.transform = 'scale(0.7)');
+document.addEventListener('mouseup', () => cursor.style.transform = 'scale(1)');
+
+// COUNTDOWN
+function updateCountdown() {
+  const target = new Date('2026-07-23T00:00:00');
+  const now = new Date();
+  const diff = target - now;
+  if (diff <= 0) {
+    document.getElementById('cd-days').textContent = '000';
+    return;
+  }
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('cd-days').textContent = String(d).padStart(3, '0');
+  document.getElementById('cd-hours').textContent = String(h).padStart(2, '0');
+  document.getElementById('cd-mins').textContent = String(m).padStart(2, '0');
+  document.getElementById('cd-secs').textContent = String(s).padStart(2, '0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// SCROLL REVEAL
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.timeline-item, .layer-card, .faculty-card, .article-card, .reveal').forEach(el => {
+  observer.observe(el);
+});
+
+// FAQ
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// MODAL
+function openModal() {
+  document.getElementById('applyModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('applyModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function submitForm() {
+  closeModal();
+  showNotification('✅ 신청서가 접수되었습니다! 담당자가 24시간 내 연락드립니다.');
+}
+
+// NOTIFICATION
+function showNotification(msg) {
+  const n = document.getElementById('notification');
+  n.textContent = msg;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 4000);
+}
+
+// CHATBOT
+const chatData = {
+  '참가비': '참가비는 <strong>800만원</strong>입니다. 항공료는 별도이며, 기숙사·식사·교육비·수료증·BattleBots 입장권·LA 1박2일이 모두 포함됩니다!',
+  '비용': '참가비는 <strong>800만원</strong>입니다. 항공료는 별도입니다.',
+  '나이': '참가 대상은 <strong>초등학교 5학년 ~ 중학교 3학년</strong>입니다. 영어가 부족해도 통역 지원이 제공됩니다.',
+  '연령': '참가 대상은 <strong>초5 ~ 중3</strong>입니다.',
+  '신청': '신청은 📧 existen75@kentertechhub.com 또는 📞 +82-10-3686-8722로 문의하시거나, 페이지 상단의 <strong>"지금 신청하기"</strong> 버튼을 눌러주세요!',
+  '숙박': '<strong>UNLV 기숙사</strong>에서 5박, <strong>LA 호텔</strong>에서 1박으로 총 6박 7일(7/23~7/30, 8일간) 일정입니다.',
+  '드론': '토요일(7/26) 오전에 <strong>어드밴스드 드론 & AI 자율비행 워크숍</strong>이 진행됩니다. UAV/UGV 조립, 드론 코딩, AI 자율비행 알고리즘 설계를 배웁니다!',
+  '로켓': 'UNLV SEDS 학생들과 함께 <strong>로켓 추진 원리, 발사체 설계, 미션 플래닝</strong>을 배웁니다. 항공우주 분야 핵심 개념을 실습 중심으로 경험해요!',
+  'battlebots': '<strong>BattleBots Destruct-A-Thon</strong> 라이브 로봇 전투를 7/26 저녁에 직접 관람합니다. 응용 로보틱스와 엔지니어링 전략을 체험할 수 있어요!',
+  'ucla': 'UCLA 캠퍼스 공식 투어와 현직 교수 면담이 <strong>7/29(화)</strong>에 진행됩니다. 한인 학생회 교류 세션도 있어요!',
+  'dri': '<strong>DRI(Desert Research Institute)</strong>는 1959년 설립, 600명+ 연구원, 7개 대륙 300건+ 프로젝트를 수행하는 세계적 환경과학 연구기관입니다. 이곳의 전문 교육팀이 4일간 직접 가르쳐줍니다!',
+  '수료증': '<strong>DRI와 K-EnterTechHub 공동 명의 수료증</strong>이 발급됩니다! 해외 대학 입학 포트폴리오, 영재고·과학고 입시 자료로 활용 가능합니다.',
+  '기간': '캠프는 <strong>2026년 7월 23일(수) ~ 7월 30일(수), 총 8일간</strong> 진행됩니다.',
+  '일정': '8일 일정: Day0 도착 → Day1~2 DRI STEM → Day3 드론·로켓·BattleBots → Day4~5 DRI STEM+캡스톤 → Day6~7 LA 명문대 투어 → 귀국'
+};
+
+function getBotReply(msg) {
+  const lower = msg.toLowerCase();
+  for (const [key, val] of Object.entries(chatData)) {
+    if (lower.includes(key.toLowerCase())) return val;
+  }
+  return '좋은 질문이에요! 더 자세한 답변을 위해 📧 existen75@kentertechhub.com 또는 📞 +82-10-3686-8722로 문의해 주세요. 빠르게 답변 드리겠습니다! 🚀';
+}
+
+function appendMsg(text, type) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + type;
+  div.innerHTML = `
+    <div class="msg-avatar ${type === 'bot' ? 'bot' : 'user-av'}">${type === 'bot' ? '🤖' : '👦'}</div>
+    <div class="msg-bubble">${text}</div>
+  `;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  appendMsg(msg, 'user');
+  input.value = '';
+
+  // Typing indicator
+  const msgs = document.getElementById('chatMessages');
+  const typing = document.createElement('div');
+  typing.className = 'msg bot';
+  typing.id = 'typing';
+  typing.innerHTML = `<div class="msg-avatar bot">🤖</div><div class="msg-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  setTimeout(() => {
+    document.getElementById('typing')?.remove();
+    appendMsg(getBotReply(msg), 'bot');
+  }, 1000 + Math.random() * 500);
+}
+
+function quickAsk(msg) {
+  document.getElementById('chatInput').value = msg;
+  sendMessage();
+}
+
+// PARTICLES
+function createParticle() {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 4 + 2;
+  p.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${Math.random() * 100}vw;
+    background:rgba(0,212,255,${Math.random() * 0.3 + 0.1});
+    animation-duration:${Math.random() * 20 + 15}s;
+    animation-delay:${Math.random() * 10}s;
+  `;
+  document.body.appendChild(p);
+  setTimeout(() => p.remove(), 35000);
+}
+setInterval(createParticle, 2000);
+</script>
+</body>
+</html>
